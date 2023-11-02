@@ -1,56 +1,36 @@
 name: Deployment pipeline
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:    
-    branches: [master]    
-    types: [opened, synchronize]
+    push:
+        branches:
+            - master
+    pull_request:
+        branches: [master]
+        types: [opened, synchronize]
 
 jobs:
-    simple_deployment_pipeline:    
-        runs-on: ubuntu-20.04    
-        steps:      
+    simple_deployment_pipeline:
+        runs-on: ubuntu-20.04
+        steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
-                node-version: '16'
+                  node-version: "16"
             - name: Install dependencies
               run: npm install
-            - name: Check style        
+            - name: Check style
               run: npm run lint
     deployment:
         name: Deploy to Render
         runs-on: ubuntu-20.04
         if: ${{ github.event_name == 'push' }}
         steps:
-          - name: Trigger deployment
-            uses: sws2apps/render-deployment@main #consider using pin for dependabot auto update
-            with:
-              serviceId: ${{ secrets.RENDER_SERVICE_ID }}
-              apiKey: ${{ secrets.RENDER_API_KEY }}
-              multipleDeployment: false 
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-              # - name: e2e tests
-            #   uses: cypress-io/github-action@v5
-            #   with:
-            #     command: npm run test:e2e
-            #     start: npm run start-prod
-            #     wait-on: http://localhost:5000
+            - name: Trigger deployment
+              run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{secrets.RENDER_API_KEY }}
+
+                  # - name: e2e tests
+              #   uses: cypress-io/github-action@v5
+              #   with:
+              #     command: npm run test:e2e
+              #     start: npm run start-prod
+              #     wait-on: http://localhost:5000
