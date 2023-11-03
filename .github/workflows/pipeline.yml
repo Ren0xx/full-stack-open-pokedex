@@ -24,18 +24,19 @@ jobs:
         needs: [simple_deployment_pipeline]
         runs-on: ubuntu-20.04
         steps:
-            - name: Bump version and push tag 
-              uses: anothrNick/github-tag-action@1.64.0
+            - name: Bump version and push tag
+              uses: anothrNick/github-tag-action@1.55.0
               env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     deployment:
         name: Deploy to Render
         runs-on: ubuntu-20.04
         if: ${{ github.event_name == 'push' }}
-        
+
         steps:
             - name: Trigger deployment
-              run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{secrets.RENDER_API_KEY }}
+              run:
+                  curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{secrets.RENDER_API_KEY }}
 
                   # - name: e2e tests
               #   uses: cypress-io/github-action@v5
